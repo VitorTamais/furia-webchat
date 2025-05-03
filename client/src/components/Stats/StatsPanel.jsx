@@ -1,4 +1,3 @@
-// components/Stats/StatsPanel.jsx
 import { useState, useEffect } from 'react';
 
 export default function StatsPanel({ queryType }) {
@@ -10,7 +9,6 @@ export default function StatsPanel({ queryType }) {
     }
   }, [queryType]);
 
-  // Renderização condicional baseada no tipo de consulta
   const renderStats = () => {
     switch(queryType) {
       case 'player':
@@ -46,7 +44,6 @@ export default function StatsPanel({ queryType }) {
   );
 }
 
-// Componentes de estatísticas específicas
 function PlayerStats() {
   return (
     <div className="grid grid-cols-3 gap-3 text-center">

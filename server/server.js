@@ -4,18 +4,16 @@ const axios = require('axios');
 const mongoose = require('mongoose');
 const socketIO = require('socket.io');
 
-// Conexão MongoDB com tratamento completo
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb://127.0.0.1:27017/furia-chat');
-    console.log('✅ Conectado ao MongoDB!');
+    console.log('Conectado ao MongoDB!');
   } catch (err) {
-    console.error('❌ Falha na conexão MongoDB:', err.message);
+    console.error('Falha na conexão MongoDB:', err.message);
     process.exit(1);
   }
 };
 
-// Modelo de Mensagem
 const Message = mongoose.model('Message', {
   text: String,
   sender: String,
@@ -30,7 +28,6 @@ const perplexityApi = axios.create({
   }
 });
 
-// Iniciar servidor após conexão DB
 (async () => {
   await connectDB();
   
@@ -47,37 +44,28 @@ const perplexityApi = axios.create({
   });
 
   io.on('connection', (socket) => {
-    console.log('Usuário conectado:', socket.id); // Adicione para debug
+    console.log('Usuário conectado:', socket.id); 
   
-    // Adicione esta função para verificar se a pergunta é sobre FURIA/CS:GO
     function isFuriaQuestion(text) {
-      // Palavras-chave sobre outros temas que devem ser bloqueados
       const forbiddenKeywords = ['seleção brasileira', 'marquinhos', 'html', 'neymar', 'copa do mundo', 'programação'];
       
-      // Se contém palavras-chave proibidas, retorna false diretamente
       if (forbiddenKeywords.some(keyword => text.toLowerCase().includes(keyword))) {
         return false;
       }
       
-      // Lista ampliada de palavras-chave relacionadas à FURIA
       const furiaKeywords = [
         'furia', 'cs', 'csgo', 'cs:go', 'counterstrike', 'kscerato', 'yuurih', 'art', 'guerri', 'fallen',
         'jogador', 'time', 'partida', 'jogo', 'campeonato', 'titulo', 'mapa', 'estatistica', 'rating',
         'major', 'esl', 'blast', 'pgl', 'rifle', 'awp', 'coach', 'igl', 'clutch', 'hltv'
       ];
-      
-      // Verifica se pelo menos uma palavra-chave FURIA está presente
       return furiaKeywords.some(keyword => text.toLowerCase().includes(keyword));
     }
 
-// Modifique o tratamento da mensagem
 socket.on('userMessage', async (msg) => {
   try {
-    // Salvar mensagem do usuário
     const userMsg = new Message({ text: msg, sender: 'user' });
     await userMsg.save();
 
-    // Verificar se é pergunta sobre FURIA
     if (!isFuriaQuestion(msg)) {
       const resposta = "Opa! Só falo sobre a FURIA CS:GO. Me pergunte sobre nosso time, jogadores, partidas ou conquistas! 🐆";
       socket.emit('botResponse', resposta);
@@ -85,7 +73,6 @@ socket.on('userMessage', async (msg) => {
       return;
     }
 
-    // Requisição para Perplexity com prompt reformulado
     const response = await perplexityApi.post('/chat/completions', {
       model: "sonar-pro",
       messages: [{

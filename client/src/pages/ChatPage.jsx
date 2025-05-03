@@ -37,7 +37,6 @@ export default function ChatPage() {
     }]);
     setIsTyping(false);
     
-    // Determinar o tipo de estatísticas a mostrar
     if (response.toLowerCase().includes('kscerato') || 
         response.toLowerCase().includes('fallen') || 
         response.toLowerCase().includes('jogador')) {
