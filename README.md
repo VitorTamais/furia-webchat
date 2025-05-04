@@ -185,5 +185,5 @@ Contribuições são bem-vindas! Para contribuir:
 
 ## 📄 Licença
 
-Desenvolvido com 🧡 para o desafio de estágio da FURIA Esports, espero que tenham gostado!
+Desenvolvido com 🧡 para o desafio da FURIA Esports, espero que tenham gostado!
 
